@@ -12,15 +12,26 @@ const Index = () => {
 
   const handleSignOut = async () => {
     try {
-      await supabase.auth.signOut();
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error("Error during sign out:", error);
+        if (error.message.includes("session_not_found")) {
+          // If session is already invalid, just redirect
+          navigate("/");
+          return;
+        }
+        throw error;
+      }
       navigate("/");
     } catch (error) {
       console.error("Error signing out:", error);
       toast({
         title: "Error signing out",
-        description: "Please try again",
+        description: "Please try again or refresh the page",
         variant: "destructive",
       });
+      // On any error, attempt to redirect to login
+      navigate("/");
     }
   };
 
