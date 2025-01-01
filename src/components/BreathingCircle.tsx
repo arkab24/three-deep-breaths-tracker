@@ -53,7 +53,7 @@ export const BreathingCircle = () => {
   };
 
   const getCircleStyles = () => {
-    const baseStyles = "w-48 h-48 rounded-full flex items-center justify-center cursor-pointer transition-all duration-500 relative border-2 border-breath-text";
+    const baseStyles = "w-64 h-64 rounded-full flex items-center justify-center cursor-pointer transition-all duration-500 relative border-2 border-breath-text";
     
     if (breathingState === 'inhale') {
       return `${baseStyles} text-breath-inhale animate-fill`;

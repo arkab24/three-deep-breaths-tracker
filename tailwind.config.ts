@@ -67,12 +67,24 @@ const config = {
           to: { height: "0" },
         },
         fill: {
-          '0%': { background: 'transparent' },
-          '100%': { background: 'currentColor' }
+          '0%': { 
+            background: 'transparent',
+            clipPath: 'circle(0% at center)'
+          },
+          '100%': { 
+            background: 'currentColor',
+            clipPath: 'circle(100% at center)'
+          }
         },
         shrink: {
-          '0%': { background: 'currentColor' },
-          '100%': { background: 'transparent' }
+          '0%': { 
+            background: 'currentColor',
+            clipPath: 'circle(100% at center)'
+          },
+          '100%': { 
+            background: 'transparent',
+            clipPath: 'circle(0% at center)'
+          }
         }
       },
       animation: {
