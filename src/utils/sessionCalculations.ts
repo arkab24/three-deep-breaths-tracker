@@ -2,15 +2,23 @@ import { startOfMonth, endOfMonth, eachWeekOfInterval, startOfWeek, endOfWeek } 
 
 export const getUniqueDaysForMonth = (sessions: any[], month: Date) => {
   const uniqueDays = new Set();
+  console.log(`Checking sessions for month: ${month.toISOString()}`);
+  console.log('All sessions:', sessions);
+  
   sessions?.forEach(session => {
     const sessionDate = new Date(session.completed_at);
+    console.log(`Comparing session date: ${sessionDate.toISOString()} with month: ${month.getMonth()}`);
+    
     if (
       sessionDate.getMonth() === month.getMonth() &&
       sessionDate.getFullYear() === month.getFullYear()
     ) {
+      console.log(`Found matching session for ${month.toLocaleString('default', { month: 'long' })}: ${sessionDate.getDate()}`);
       uniqueDays.add(sessionDate.getDate());
     }
   });
+  
+  console.log(`Unique days for ${month.toLocaleString('default', { month: 'long' })}: ${uniqueDays.size}`);
   return uniqueDays.size;
 };
 
