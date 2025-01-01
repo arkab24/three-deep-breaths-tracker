@@ -3,6 +3,8 @@ import { toast } from '@/components/ui/use-toast';
 import { WeeklySessionsTracker } from './WeeklySessionsTracker';
 import { supabase } from '@/integrations/supabase/client';
 import { useQueryClient } from '@tanstack/react-query';
+import { BreathingAnimation } from './breathing/BreathingAnimation';
+import { SessionCounter } from './breathing/SessionCounter';
 
 type BreathingState = 'idle' | 'inhale' | 'exhale';
 
@@ -86,51 +88,25 @@ export const BreathingCircle = () => {
     }
   };
 
-  const getCircleStyles = () => {
-    const baseStyles = "w-64 h-64 rounded-full flex items-center justify-center cursor-pointer transition-all duration-500 relative";
-    
-    if (breathingState === 'inhale') {
-      return `${baseStyles} text-breath-inhale animate-fill border-2 border-transparent`;
-    } else if (breathingState === 'exhale') {
-      return `${baseStyles} text-breath-exhale animate-shrink border-2 border-transparent`;
-    }
-    return `${baseStyles} bg-transparent border-2 border-breath-text`;
-  };
-
   return (
     <div className="min-h-screen bg-breath-background flex flex-col items-center justify-center gap-8 px-4">
       <h1 className="text-3xl font-semibold text-breath-text">Three Deep Breaths</h1>
       
       <div className="flex flex-col items-center gap-8">
-        <div className="text-breath-text text-xl mb-4">
-          Breath: {currentBreath}/3
-        </div>
+        <SessionCounter 
+          currentBreath={currentBreath}
+          sessionCount={sessionCount}
+          breathingState={breathingState}
+          isAnimating={isAnimating}
+        />
 
-        <div className="relative">
-          <div
-            onClick={handleCircleClick}
-            className={getCircleStyles()}
-          >
-            <span className="text-xl text-breath-text z-10 absolute">
-              {breathingState === 'idle' 
-                ? (isAnimating ? '' : 'Click to begin') 
-                : breathingState === 'inhale' 
-                  ? 'Inhale...' 
-                  : 'Exhale...'}
-            </span>
-          </div>
-        </div>
-
-        <div className="text-breath-text text-xl mt-4">
-          Sessions completed today: {sessionCount}
-        </div>
+        <BreathingAnimation 
+          breathingState={breathingState}
+          isAnimating={isAnimating}
+          currentBreath={currentBreath}
+          onCircleClick={handleCircleClick}
+        />
       </div>
-
-      {breathingState === 'idle' && !isAnimating && currentBreath > 0 && (
-        <div className="text-sm text-breath-text animate-pulse">
-          Click to continue your session
-        </div>
-      )}
 
       <WeeklySessionsTracker />
     </div>
