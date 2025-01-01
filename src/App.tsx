@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Landing from "./pages/Landing";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { Header } from "./components/Header";
 
 const queryClient = new QueryClient();
 
@@ -22,7 +23,10 @@ const App = () => (
               path="/app"
               element={
                 <ProtectedRoute>
-                  <Index />
+                  <>
+                    <Header />
+                    <Index />
+                  </>
                 </ProtectedRoute>
               }
             />
