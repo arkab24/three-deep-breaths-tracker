@@ -43,7 +43,7 @@ export const WeeklySessionsTracker = () => {
   };
 
   return (
-    <div className="mt-8 p-4 bg-white rounded-lg shadow-sm">
+    <div className="mt-8 mb-8 p-4 bg-white rounded-lg shadow-sm">
       <h2 className="text-lg font-semibold text-breath-text mb-4">Weekly Progress</h2>
       <div className="flex justify-between gap-2">
         {weekDays.map((day, index) => {
