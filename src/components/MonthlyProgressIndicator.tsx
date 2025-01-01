@@ -30,7 +30,7 @@ export const MonthlyProgressIndicator = ({
             }`}
           >
             <span className="text-xs text-breath-text mb-1">
-              {format(month, 'L')}
+              {format(month, 'M')}
             </span>
             <div
               className={`w-6 h-6 rounded-full flex items-center justify-center ${
