@@ -17,7 +17,7 @@ export const BreathingCircle = () => {
       timer = setTimeout(() => {
         console.log('Inhale complete, starting exhale');
         setBreathingState('exhale');
-      }, 5000);
+      }, 5000); // 5 seconds for inhale
     } else if (breathingState === 'exhale') {
       console.log('Processing exhale phase');
       timer = setTimeout(() => {
@@ -27,6 +27,8 @@ export const BreathingCircle = () => {
         if (newBreathCount === 3) {
           setSessionCount(prev => prev + 1);
           setCurrentBreath(0);
+          setBreathingState('idle');
+          setIsAnimating(false);
           toast({
             title: "Session Complete!",
             description: "You've completed 3 deep breaths. Great job!",
@@ -34,11 +36,10 @@ export const BreathingCircle = () => {
           console.log('Session completed, count increased');
         } else {
           setCurrentBreath(newBreathCount);
+          // Automatically start the next breath
+          setBreathingState('inhale');
         }
-        
-        setBreathingState('idle');
-        setIsAnimating(false);
-      }, 5000);
+      }, 5000); // 5 seconds for exhale
     }
 
     return () => clearTimeout(timer);
