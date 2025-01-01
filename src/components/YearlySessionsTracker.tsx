@@ -16,7 +16,7 @@ export const YearlySessionsTracker = () => {
 
   return (
     <div className="p-6 bg-breath-subtle rounded-xl border border-breath-border">
-      <h2 className="text-lg font-medium text-breath-text mb-4">
+      <h2 className="text-base md:text-lg font-medium text-breath-text mb-4">
         yearly progress: {totalUniqueDays}/365
       </h2>
 
