@@ -52,10 +52,10 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        "breath-background": "#F1F0FB", // Soft calming background
+        "breath-background": "#F1F0FB",
         "breath-text": "#2d3748",
-        "breath-inhale": "#F2FCE2", // Soft green for inhale
-        "breath-exhale": "#D3E4FD", // Soft blue for exhale
+        "breath-inhale": "#48bb78", // Bolder green
+        "breath-exhale": "#4299e1", // Bolder blue
       },
       keyframes: {
         "accordion-down": {
@@ -67,12 +67,12 @@ const config = {
           to: { height: "0" },
         },
         fill: {
-          '0%': { transform: 'scale(1)' },
-          '100%': { transform: 'scale(1.25)' } // Reduced from 1.5 to 1.25
+          '0%': { background: 'transparent' },
+          '100%': { background: 'currentColor' }
         },
         shrink: {
-          '0%': { transform: 'scale(1.25)' }, // Reduced from 1.5 to 1.25
-          '100%': { transform: 'scale(1)' }
+          '0%': { background: 'currentColor' },
+          '100%': { background: 'transparent' }
         }
       },
       animation: {

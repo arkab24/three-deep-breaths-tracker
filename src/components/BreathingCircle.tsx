@@ -36,7 +36,6 @@ export const BreathingCircle = () => {
           console.log('Session completed, count increased');
         } else {
           setCurrentBreath(newBreathCount);
-          // Automatically start the next breath
           setBreathingState('inhale');
         }
       }, 5000); // 5 seconds for exhale
@@ -54,14 +53,14 @@ export const BreathingCircle = () => {
   };
 
   const getCircleStyles = () => {
-    const baseStyles = "w-48 h-48 rounded-full flex items-center justify-center cursor-pointer transition-all duration-500 relative"; // Reduced from w-64 h-64
+    const baseStyles = "w-48 h-48 rounded-full flex items-center justify-center cursor-pointer transition-all duration-500 relative border-2 border-breath-text";
     
     if (breathingState === 'inhale') {
-      return `${baseStyles} bg-breath-inhale animate-fill`;
+      return `${baseStyles} text-breath-inhale animate-fill`;
     } else if (breathingState === 'exhale') {
-      return `${baseStyles} bg-breath-exhale animate-shrink`;
+      return `${baseStyles} text-breath-exhale animate-shrink`;
     }
-    return `${baseStyles} bg-white border-2 border-breath-text`;
+    return `${baseStyles} bg-transparent`;
   };
 
   return (
@@ -77,7 +76,7 @@ export const BreathingCircle = () => {
           onClick={handleCircleClick}
           className={getCircleStyles()}
         >
-          <span className="text-xl text-breath-text"> {/* Reduced from text-2xl */}
+          <span className="text-xl text-breath-text z-10">
             {breathingState === 'idle' 
               ? (isAnimating ? '' : 'Click to begin') 
               : breathingState === 'inhale' 
