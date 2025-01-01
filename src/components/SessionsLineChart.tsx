@@ -8,7 +8,7 @@ interface SessionsLineChartProps {
 
 export const SessionsLineChart = ({ months, getTotalSessionsForMonth }: SessionsLineChartProps) => {
   const chartData = months.map(month => ({
-    name: format(month, 'L'),
+    name: format(month, 'MMM').charAt(0),
     sessions: getTotalSessionsForMonth(month),
   }));
 
