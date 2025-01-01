@@ -9,7 +9,6 @@ interface SessionsLineChartProps {
 export const SessionsLineChart = ({ months, getTotalSessionsForMonth }: SessionsLineChartProps) => {
   const chartData = months.map(month => ({
     name: format(month, 'MMM').charAt(0),
-    fullName: format(month, 'MMMM'),
     sessions: getTotalSessionsForMonth(month),
   }));
 
@@ -31,7 +30,6 @@ export const SessionsLineChart = ({ months, getTotalSessionsForMonth }: Sessions
               fontSize: '0.875rem',
               color: '#484848'
             }}
-            formatter={(value: number, name: string, props: any) => [value, props.payload.fullName]}
           />
           <Line 
             type="monotone" 
