@@ -40,10 +40,14 @@ export default function Landing() {
                   inputBorderFocus: '#00A699',
                 }
               }
+            },
+            className: {
+              divider: 'my-4'
             }
           }}
-          providers={[]}
+          providers={["google"]}
           redirectTo={window.location.origin + "/app"}
+          view="sign_in"
         />
       </div>
     </div>
