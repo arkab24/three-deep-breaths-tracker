@@ -15,11 +15,11 @@ export const SessionCounter = ({
 }: SessionCounterProps) => {
   return (
     <>
-      <div className="text-breath-text text-xl mb-4">
+      <div className="text-breath-text text-lg md:text-xl mb-2 md:mb-4">
         Breath: {currentBreath}/3
       </div>
 
-      <div className="text-breath-text text-xl mt-4">
+      <div className="text-breath-text text-lg md:text-xl mt-2 md:mt-4">
         Sessions completed today: {sessionCount}
       </div>
 

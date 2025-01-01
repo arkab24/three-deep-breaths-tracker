@@ -94,13 +94,12 @@ export const WeeklySessionsTracker = () => {
   }
 
   return (
-    <div className="mt-8 mb-8 p-6 bg-breath-subtle rounded-xl border border-breath-border">
-      <h2 className="text-lg font-medium text-breath-text mb-4">
+    <div className="mt-4 md:mt-8 mb-4 md:mb-8 p-4 md:p-6 bg-breath-subtle rounded-xl border border-breath-border">
+      <h2 className="text-base md:text-lg font-medium text-breath-text mb-4">
         weekly progress: {completedDays}/7
       </h2>
 
-      {/* Line Chart */}
-      <div className="h-24 mb-4">
+      <div className="h-20 md:h-24 mb-4">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData}>
             <XAxis 
@@ -130,7 +129,7 @@ export const WeeklySessionsTracker = () => {
         </ResponsiveContainer>
       </div>
 
-      <div className="flex justify-between gap-2">
+      <div className="grid grid-cols-7 gap-1 md:gap-2">
         {weekDays.map((day, index) => {
           const hasSessionsForDay = getSessionsForDay(day) > 0;
           const isCurrentDay = isToday(day);
@@ -138,24 +137,24 @@ export const WeeklySessionsTracker = () => {
           return (
             <div
               key={index}
-              className={`flex flex-col items-center p-2 rounded-lg ${
+              className={`flex flex-col items-center p-1 md:p-2 rounded-lg ${
                 isCurrentDay ? 'bg-white border border-breath-border' : ''
               }`}
             >
-              <span className="text-sm text-breath-text mb-2">
+              <span className="text-xs md:text-sm text-breath-text mb-1 md:mb-2">
                 {format(day, 'EEE')}
               </span>
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                className={`w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center ${
                   hasSessionsForDay
                     ? 'bg-breath-inhale text-white'
                     : 'bg-breath-subtle border border-breath-border'
                 }`}
               >
                 {hasSessionsForDay ? (
-                  <Check className="w-5 h-5" />
+                  <Check className="w-4 h-4 md:w-5 md:h-5" />
                 ) : (
-                  <X className="w-5 h-5 text-breath-text opacity-30" />
+                  <X className="w-4 h-4 md:w-5 md:h-5 text-breath-text opacity-30" />
                 )}
               </div>
             </div>

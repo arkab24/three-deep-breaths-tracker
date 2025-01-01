@@ -89,10 +89,10 @@ export const BreathingCircle = () => {
   };
 
   return (
-    <div className="min-h-screen bg-breath-background flex flex-col items-center justify-center gap-8 px-4">
-      <h1 className="text-3xl font-semibold text-breath-text">Three Deep Breaths</h1>
+    <div className="min-h-[50vh] md:min-h-[60vh] bg-breath-background flex flex-col items-center justify-center gap-6 md:gap-8 px-4 rounded-lg">
+      <h1 className="text-2xl md:text-3xl font-semibold text-breath-text">Three Deep Breaths</h1>
       
-      <div className="flex flex-col items-center gap-8">
+      <div className="flex flex-col items-center gap-6 md:gap-8">
         <SessionCounter 
           currentBreath={currentBreath}
           sessionCount={sessionCount}
@@ -107,8 +107,6 @@ export const BreathingCircle = () => {
           onCircleClick={handleCircleClick}
         />
       </div>
-
-      <WeeklySessionsTracker />
     </div>
   );
 };

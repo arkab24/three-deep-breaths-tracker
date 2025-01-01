@@ -3,7 +3,7 @@ import { SessionsTracker } from "@/components/SessionsTracker";
 
 const Index = () => {
   return (
-    <main className="flex-1 container max-w-lg mx-auto p-4">
+    <main className="flex-1 container max-w-lg mx-auto p-4 space-y-8">
       <BreathingCircle />
       <SessionsTracker />
     </main>

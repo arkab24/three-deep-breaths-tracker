@@ -16,7 +16,7 @@ export const BreathingAnimation = ({
   onCircleClick 
 }: BreathingAnimationProps) => {
   const getCircleStyles = () => {
-    const baseStyles = "w-64 h-64 rounded-full flex items-center justify-center cursor-pointer transition-all duration-500 relative";
+    const baseStyles = "w-48 h-48 md:w-64 md:h-64 rounded-full flex items-center justify-center cursor-pointer transition-all duration-500 relative";
     
     if (breathingState === 'inhale') {
       return `${baseStyles} text-breath-inhale animate-fill border-2 border-transparent`;
@@ -32,7 +32,7 @@ export const BreathingAnimation = ({
         onClick={onCircleClick}
         className={getCircleStyles()}
       >
-        <span className="text-xl text-breath-text z-10 absolute">
+        <span className="text-lg md:text-xl text-breath-text z-10 absolute">
           {breathingState === 'idle' 
             ? (isAnimating ? '' : 'Click to begin') 
             : breathingState === 'inhale' 
