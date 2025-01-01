@@ -52,10 +52,12 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        "breath-background": "#F1F0FB",
-        "breath-text": "#2d3748",
-        "breath-inhale": "#48bb78",
-        "breath-exhale": "#4299e1",
+        "breath-background": "#F8F8F8",
+        "breath-text": "#484848",
+        "breath-inhale": "#008489",
+        "breath-exhale": "#00A699",
+        "breath-subtle": "#F7F7F7",
+        "breath-border": "#EBEBEB",
       },
       keyframes: {
         "accordion-down": {

@@ -53,9 +53,9 @@ export const WeeklySessionsTracker = () => {
   }));
 
   return (
-    <div className="mt-8 mb-8 p-4 bg-white rounded-lg shadow-sm">
-      <h2 className="text-lg font-semibold text-breath-text mb-4">
-        Weekly Progress ({completedDays} of 7 days completed)
+    <div className="mt-8 mb-8 p-6 bg-breath-subtle rounded-xl border border-breath-border">
+      <h2 className="text-lg font-medium text-breath-text mb-4">
+        weekly progress: {completedDays}/7
       </h2>
 
       {/* Line Chart */}
@@ -64,25 +64,26 @@ export const WeeklySessionsTracker = () => {
           <LineChart data={chartData}>
             <XAxis 
               dataKey="name" 
-              tick={{ fontSize: 12 }} 
+              tick={{ fontSize: 12, fill: '#484848' }} 
               axisLine={false}
               tickLine={false}
             />
             <Tooltip 
               contentStyle={{ 
                 background: 'white',
-                border: '1px solid #e2e8f0',
+                border: '1px solid #EBEBEB',
                 borderRadius: '0.375rem',
-                fontSize: '0.875rem'
+                fontSize: '0.875rem',
+                color: '#484848'
               }}
             />
             <Line 
               type="monotone" 
               dataKey="sessions" 
-              stroke="#48bb78"
+              stroke="#008489"
               strokeWidth={2}
               dot={false}
-              activeDot={{ r: 4, fill: "#48bb78" }}
+              activeDot={{ r: 4, fill: "#008489" }}
             />
           </LineChart>
         </ResponsiveContainer>
@@ -97,7 +98,7 @@ export const WeeklySessionsTracker = () => {
             <div
               key={index}
               className={`flex flex-col items-center p-2 rounded-lg ${
-                isCurrentDay ? 'bg-breath-background' : ''
+                isCurrentDay ? 'bg-white border border-breath-border' : ''
               }`}
             >
               <span className="text-sm text-breath-text mb-2">
@@ -107,13 +108,13 @@ export const WeeklySessionsTracker = () => {
                 className={`w-8 h-8 rounded-full flex items-center justify-center ${
                   hasSessionsForDay
                     ? 'bg-breath-inhale text-white'
-                    : 'bg-gray-100'
+                    : 'bg-breath-subtle border border-breath-border'
                 }`}
               >
                 {hasSessionsForDay ? (
                   <Check className="w-5 h-5" />
                 ) : (
-                  <X className="w-5 h-5 text-gray-400" />
+                  <X className="w-5 h-5 text-breath-text opacity-30" />
                 )}
               </div>
             </div>
