@@ -72,17 +72,19 @@ export const BreathingCircle = () => {
           Breath: {currentBreath}/3
         </div>
 
-        <div
-          onClick={handleCircleClick}
-          className={getCircleStyles()}
-        >
-          <span className="text-xl text-breath-text z-10">
-            {breathingState === 'idle' 
-              ? (isAnimating ? '' : 'Click to begin') 
-              : breathingState === 'inhale' 
-                ? 'Inhale...' 
-                : 'Exhale...'}
-          </span>
+        <div className="relative">
+          <div
+            onClick={handleCircleClick}
+            className={getCircleStyles()}
+          >
+            <span className="text-xl text-breath-text z-10 absolute">
+              {breathingState === 'idle' 
+                ? (isAnimating ? '' : 'Click to begin') 
+                : breathingState === 'inhale' 
+                  ? 'Inhale...' 
+                  : 'Exhale...'}
+            </span>
+          </div>
         </div>
 
         <div className="text-breath-text text-xl mt-4">

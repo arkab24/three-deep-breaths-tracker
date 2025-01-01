@@ -54,8 +54,8 @@ const config = {
         },
         "breath-background": "#F1F0FB",
         "breath-text": "#2d3748",
-        "breath-inhale": "#48bb78", // Bolder green
-        "breath-exhale": "#4299e1", // Bolder blue
+        "breath-inhale": "#48bb78",
+        "breath-exhale": "#4299e1",
       },
       keyframes: {
         "accordion-down": {
@@ -67,24 +67,12 @@ const config = {
           to: { height: "0" },
         },
         fill: {
-          '0%': { 
-            background: 'transparent',
-            clipPath: 'circle(0% at center)'
-          },
-          '100%': { 
-            background: 'currentColor',
-            clipPath: 'circle(100% at center)'
-          }
+          '0%': { transform: 'scale(1)', background: 'transparent' },
+          '100%': { transform: 'scale(1.25)', background: 'currentColor' }
         },
         shrink: {
-          '0%': { 
-            background: 'currentColor',
-            clipPath: 'circle(100% at center)'
-          },
-          '100%': { 
-            background: 'transparent',
-            clipPath: 'circle(0% at center)'
-          }
+          '0%': { transform: 'scale(1.25)', background: 'currentColor' },
+          '100%': { transform: 'scale(1)', background: 'transparent' }
         }
       },
       animation: {
