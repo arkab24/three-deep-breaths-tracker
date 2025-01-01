@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from '@/components/ui/use-toast';
+import { WeeklySessionsTracker } from './WeeklySessionsTracker';
+import { supabase } from '@/integrations/supabase/client';
+import { useQueryClient } from '@tanstack/react-query';
 
 type BreathingState = 'idle' | 'inhale' | 'exhale';
 
@@ -8,6 +11,7 @@ export const BreathingCircle = () => {
   const [currentBreath, setCurrentBreath] = useState(0);
   const [sessionCount, setSessionCount] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -25,6 +29,7 @@ export const BreathingCircle = () => {
         console.log(`Breath ${newBreathCount}/3 completed`);
         
         if (newBreathCount === 3) {
+          handleSessionComplete();
           setSessionCount(prev => prev + 1);
           setCurrentBreath(0);
           setBreathingState('idle');
@@ -43,6 +48,27 @@ export const BreathingCircle = () => {
 
     return () => clearTimeout(timer);
   }, [breathingState, currentBreath]);
+
+  const handleSessionComplete = async () => {
+    try {
+      const { error } = await supabase
+        .from('sessions')
+        .insert([{}]);
+
+      if (error) throw error;
+
+      // Invalidate the sessions query to trigger a refetch
+      queryClient.invalidateQueries({ queryKey: ['sessions'] });
+      console.log('Session recorded successfully');
+    } catch (error) {
+      console.error('Error recording session:', error);
+      toast({
+        title: "Error",
+        description: "Failed to record session. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleCircleClick = () => {
     if (breathingState === 'idle' && !isAnimating) {
@@ -97,6 +123,8 @@ export const BreathingCircle = () => {
           Click to continue your session
         </div>
       )}
+
+      <WeeklySessionsTracker />
     </div>
   );
 };
