@@ -1,10 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import { startOfYear, endOfYear, eachMonthOfInterval, format, isThisMonth } from "date-fns";
+import { startOfYear, endOfYear, eachMonthOfInterval, format, isThisMonth, startOfMonth, endOfMonth, eachWeekOfInterval, startOfWeek, endOfWeek } from "date-fns";
 import { X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export const YearlySessionsTracker = () => {
   const navigate = useNavigate();
@@ -83,6 +89,49 @@ export const YearlySessionsTracker = () => {
     return uniqueDays.size;
   };
 
+  // Get total sessions for each month (for the line chart)
+  const getTotalSessionsForMonth = (month: Date) => {
+    return sessions?.filter(session => {
+      const sessionDate = new Date(session.completed_at);
+      return (
+        sessionDate.getMonth() === month.getMonth() &&
+        sessionDate.getFullYear() === month.getFullYear()
+      );
+    }).length || 0;
+  };
+
+  // Calculate perfect weeks for a month
+  const getPerfectWeeksForMonth = (month: Date) => {
+    const monthStart = startOfMonth(month);
+    const monthEnd = endOfMonth(month);
+    const weeks = eachWeekOfInterval({ start: monthStart, end: monthEnd });
+    
+    let perfectWeeks = 0;
+    weeks.forEach(weekStart => {
+      const weekEnd = endOfWeek(weekStart);
+      const hasSessionEveryDay = Array.from({ length: 7 }).every((_, index) => {
+        const currentDate = new Date(weekStart);
+        currentDate.setDate(currentDate.getDate() + index);
+        
+        // Only count days within the current month
+        if (currentDate.getMonth() !== month.getMonth()) return true;
+        
+        return sessions?.some(session => {
+          const sessionDate = new Date(session.completed_at);
+          return (
+            sessionDate.getDate() === currentDate.getDate() &&
+            sessionDate.getMonth() === currentDate.getMonth() &&
+            sessionDate.getFullYear() === currentDate.getFullYear()
+          );
+        });
+      });
+      
+      if (hasSessionEveryDay) perfectWeeks++;
+    });
+    
+    return perfectWeeks;
+  };
+
   // Get total unique days with sessions for the year
   const totalUniqueDays = new Set(
     sessions?.map(session => {
@@ -94,7 +143,7 @@ export const YearlySessionsTracker = () => {
   // Prepare data for the line chart
   const chartData = months.map(month => ({
     name: format(month, 'MMM'),
-    sessions: getUniqueDaysForMonth(month),
+    sessions: getTotalSessionsForMonth(month),
   }));
 
   if (!isAuthenticated) {
@@ -117,7 +166,7 @@ export const YearlySessionsTracker = () => {
               axisLine={false}
               tickLine={false}
             />
-            <Tooltip 
+            <RechartsTooltip 
               contentStyle={{ 
                 background: 'white',
                 border: '1px solid #EBEBEB',
@@ -141,32 +190,41 @@ export const YearlySessionsTracker = () => {
       <div className="grid grid-cols-12 gap-1">
         {months.map((month, index) => {
           const sessionsInMonth = getUniqueDaysForMonth(month);
+          const perfectWeeks = getPerfectWeeksForMonth(month);
           const isCurrentMonth = isThisMonth(month);
 
           return (
-            <div
-              key={index}
-              className={`flex flex-col items-center p-1 rounded-lg ${
-                isCurrentMonth ? 'bg-white border border-breath-border' : ''
-              }`}
-            >
-              <span className="text-xs text-breath-text mb-1">
-                {format(month, 'MMM')}
-              </span>
-              <div
-                className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                  sessionsInMonth > 0
-                    ? 'bg-breath-inhale text-white'
-                    : 'bg-breath-subtle border border-breath-border'
-                }`}
-              >
-                {sessionsInMonth > 0 ? (
-                  <span className="text-xs">{sessionsInMonth}</span>
-                ) : (
-                  <X className="w-4 h-4 text-breath-text opacity-30" />
-                )}
-              </div>
-            </div>
+            <TooltipProvider key={index}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div
+                    className={`flex flex-col items-center p-1 rounded-lg ${
+                      isCurrentMonth ? 'bg-white border border-breath-border' : ''
+                    }`}
+                  >
+                    <span className="text-xs text-breath-text mb-1">
+                      {format(month, 'MMM')}
+                    </span>
+                    <div
+                      className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                        sessionsInMonth > 0
+                          ? 'bg-breath-inhale text-white'
+                          : 'bg-breath-subtle border border-breath-border'
+                      }`}
+                    >
+                      {sessionsInMonth > 0 ? (
+                        <span className="text-xs">{sessionsInMonth}</span>
+                      ) : (
+                        <X className="w-4 h-4 text-breath-text opacity-30" />
+                      )}
+                    </div>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Perfect weeks: {perfectWeeks}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           );
         })}
       </div>
