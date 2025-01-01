@@ -5,15 +5,40 @@ import { supabase } from '@/integrations/supabase/client';
 import { useQueryClient } from '@tanstack/react-query';
 import { BreathingAnimation } from './breathing/BreathingAnimation';
 import { SessionCounter } from './breathing/SessionCounter';
+import { startOfDay, endOfDay } from 'date-fns';
+import { useQuery } from '@tanstack/react-query';
 
 type BreathingState = 'idle' | 'inhale' | 'exhale';
 
 export const BreathingCircle = () => {
   const [breathingState, setBreathingState] = useState<BreathingState>('idle');
   const [currentBreath, setCurrentBreath] = useState(0);
-  const [sessionCount, setSessionCount] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const queryClient = useQueryClient();
+
+  // Fetch today's sessions
+  const { data: todaySessions } = useQuery({
+    queryKey: ['sessions', 'today'],
+    queryFn: async () => {
+      const today = new Date();
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error('User not authenticated');
+      }
+
+      const { data, error } = await supabase
+        .from('sessions')
+        .select('*')
+        .gte('completed_at', startOfDay(today).toISOString())
+        .lte('completed_at', endOfDay(today).toISOString())
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+      console.log('Today\'s sessions:', data);
+      return data || [];
+    },
+  });
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -32,7 +57,6 @@ export const BreathingCircle = () => {
         
         if (newBreathCount === 3) {
           handleSessionComplete();
-          setSessionCount(prev => prev + 1);
           setCurrentBreath(0);
           setBreathingState('idle');
           setIsAnimating(false);
@@ -67,7 +91,7 @@ export const BreathingCircle = () => {
 
       if (error) throw error;
 
-      // Invalidate the sessions query to trigger a refetch
+      // Invalidate both weekly and today's sessions queries
       queryClient.invalidateQueries({ queryKey: ['sessions'] });
       console.log('Session recorded successfully');
     } catch (error) {
@@ -96,7 +120,7 @@ export const BreathingCircle = () => {
         <div className="space-y-1 md:space-y-2 mb-8 md:mb-12 text-center">
           <SessionCounter 
             currentBreath={currentBreath}
-            sessionCount={sessionCount}
+            sessionCount={todaySessions?.length || 0}
             breathingState={breathingState}
             isAnimating={isAnimating}
           />
