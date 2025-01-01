@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { startOfWeek, eachDayOfInterval, endOfWeek, format, isToday } from "date-fns";
 import { Check, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 export const WeeklySessionsTracker = () => {
   // Get the current week's dates
@@ -30,24 +31,66 @@ export const WeeklySessionsTracker = () => {
     },
   });
 
-  // Check if a day has sessions
-  const hasSessions = (date: Date) => {
-    return sessions?.some(session => {
+  // Check if a day has sessions and count them
+  const getSessionsForDay = (date: Date) => {
+    return sessions?.filter(session => {
       const sessionDate = new Date(session.completed_at);
       return (
         sessionDate.getDate() === date.getDate() &&
         sessionDate.getMonth() === date.getMonth() &&
         sessionDate.getFullYear() === date.getFullYear()
       );
-    });
+    }).length || 0;
   };
+
+  // Count completed days (days with at least one session)
+  const completedDays = weekDays.filter(day => getSessionsForDay(day) > 0).length;
+
+  // Prepare data for the line chart
+  const chartData = weekDays.map(day => ({
+    name: format(day, 'EEE'),
+    sessions: getSessionsForDay(day),
+  }));
 
   return (
     <div className="mt-8 mb-8 p-4 bg-white rounded-lg shadow-sm">
-      <h2 className="text-lg font-semibold text-breath-text mb-4">Weekly Progress</h2>
+      <h2 className="text-lg font-semibold text-breath-text mb-4">
+        Weekly Progress ({completedDays} of 7 days completed)
+      </h2>
+
+      {/* Line Chart */}
+      <div className="h-24 mb-4">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={chartData}>
+            <XAxis 
+              dataKey="name" 
+              tick={{ fontSize: 12 }} 
+              axisLine={false}
+              tickLine={false}
+            />
+            <Tooltip 
+              contentStyle={{ 
+                background: 'white',
+                border: '1px solid #e2e8f0',
+                borderRadius: '0.375rem',
+                fontSize: '0.875rem'
+              }}
+            />
+            <Line 
+              type="monotone" 
+              dataKey="sessions" 
+              stroke="#48bb78"
+              strokeWidth={2}
+              dot={false}
+              activeDot={{ r: 4, fill: "#48bb78" }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+
       <div className="flex justify-between gap-2">
         {weekDays.map((day, index) => {
-          const hasSessionsForDay = hasSessions(day);
+          const hasSessionsForDay = getSessionsForDay(day) > 0;
           const isCurrentDay = isToday(day);
 
           return (
