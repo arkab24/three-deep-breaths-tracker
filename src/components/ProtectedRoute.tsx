@@ -7,12 +7,40 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (!session) {
+    // Check initial session
+    const checkSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        console.log("Initial session check:", session ? "Session exists" : "No session");
+        
+        if (!session) {
+          console.log("No session found, redirecting to login");
+          navigate("/");
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error("Error checking session:", error);
+        navigate("/");
+        setLoading(false);
+      }
+    };
+
+    checkSession();
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state changed:", event, session ? "Session exists" : "No session");
+      
+      if (event === 'SIGNED_OUT' || !session) {
+        console.log("User signed out or session expired, redirecting to login");
         navigate("/");
       }
-      setLoading(false);
     });
+
+    // Cleanup subscription
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [navigate]);
 
   if (loading) {
