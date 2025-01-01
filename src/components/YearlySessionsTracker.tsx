@@ -102,7 +102,7 @@ export const YearlySessionsTracker = () => {
   }
 
   return (
-    <div className="mt-8 mb-8 p-6 bg-breath-subtle rounded-xl border border-breath-border">
+    <div className="p-6 bg-breath-subtle rounded-xl border border-breath-border">
       <h2 className="text-lg font-medium text-breath-text mb-4">
         yearly progress: {totalUniqueDays}/365
       </h2>
@@ -138,7 +138,7 @@ export const YearlySessionsTracker = () => {
         </ResponsiveContainer>
       </div>
 
-      <div className="flex justify-between gap-2">
+      <div className="grid grid-cols-12 gap-1">
         {months.map((month, index) => {
           const sessionsInMonth = getUniqueDaysForMonth(month);
           const isCurrentMonth = isThisMonth(month);
@@ -146,24 +146,24 @@ export const YearlySessionsTracker = () => {
           return (
             <div
               key={index}
-              className={`flex flex-col items-center p-2 rounded-lg ${
+              className={`flex flex-col items-center p-1 rounded-lg ${
                 isCurrentMonth ? 'bg-white border border-breath-border' : ''
               }`}
             >
-              <span className="text-sm text-breath-text mb-2">
+              <span className="text-xs text-breath-text mb-1">
                 {format(month, 'MMM')}
               </span>
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                className={`w-6 h-6 rounded-full flex items-center justify-center ${
                   sessionsInMonth > 0
                     ? 'bg-breath-inhale text-white'
                     : 'bg-breath-subtle border border-breath-border'
                 }`}
               >
                 {sessionsInMonth > 0 ? (
-                  <span className="text-sm">{sessionsInMonth}</span>
+                  <span className="text-xs">{sessionsInMonth}</span>
                 ) : (
-                  <X className="w-5 h-5 text-breath-text opacity-30" />
+                  <X className="w-4 h-4 text-breath-text opacity-30" />
                 )}
               </div>
             </div>
