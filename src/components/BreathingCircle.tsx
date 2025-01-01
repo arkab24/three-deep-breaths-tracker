@@ -53,14 +53,14 @@ export const BreathingCircle = () => {
   };
 
   const getCircleStyles = () => {
-    const baseStyles = "w-64 h-64 rounded-full flex items-center justify-center cursor-pointer transition-all duration-500 relative border-2 border-breath-text";
+    const baseStyles = "w-64 h-64 rounded-full flex items-center justify-center cursor-pointer transition-all duration-500 relative";
     
     if (breathingState === 'inhale') {
-      return `${baseStyles} text-breath-inhale animate-fill`;
+      return `${baseStyles} text-breath-inhale animate-fill border-2 border-transparent`;
     } else if (breathingState === 'exhale') {
-      return `${baseStyles} text-breath-exhale animate-shrink`;
+      return `${baseStyles} text-breath-exhale animate-shrink border-2 border-transparent`;
     }
-    return `${baseStyles} bg-transparent`;
+    return `${baseStyles} bg-transparent border-2 border-breath-text`;
   };
 
   return (

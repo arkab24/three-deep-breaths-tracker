@@ -67,12 +67,12 @@ const config = {
           to: { height: "0" },
         },
         fill: {
-          '0%': { transform: 'scale(1)', background: 'transparent' },
-          '100%': { transform: 'scale(1.25)', background: 'currentColor' }
+          '0%': { transform: 'scale(1)', background: 'transparent', borderColor: 'currentColor' },
+          '100%': { transform: 'scale(1.25)', background: 'currentColor', borderColor: 'transparent' }
         },
         shrink: {
-          '0%': { transform: 'scale(1.25)', background: 'currentColor' },
-          '100%': { transform: 'scale(1)', background: 'transparent' }
+          '0%': { transform: 'scale(1.25)', background: 'currentColor', borderColor: 'transparent' },
+          '100%': { transform: 'scale(1)', background: 'transparent', borderColor: 'currentColor' }
         }
       },
       animation: {
