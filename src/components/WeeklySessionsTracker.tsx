@@ -3,8 +3,36 @@ import { startOfWeek, eachDayOfInterval, endOfWeek, format, isToday } from "date
 import { Check, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const WeeklySessionsTracker = () => {
+  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        navigate('/');
+      } else {
+        setIsAuthenticated(true);
+      }
+    };
+
+    checkAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!session) {
+        navigate('/');
+      } else {
+        setIsAuthenticated(true);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
   // Get the current week's dates
   const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 }); // Start week on Monday
   const weekEnd = endOfWeek(new Date(), { weekStartsOn: 1 });
@@ -14,6 +42,11 @@ export const WeeklySessionsTracker = () => {
   const { data: sessions } = useQuery({
     queryKey: ['sessions', 'weekly'],
     queryFn: async () => {
+      if (!isAuthenticated) {
+        console.log('User not authenticated, skipping query');
+        return [];
+      }
+
       console.log('Fetching weekly sessions...');
       const { data, error } = await supabase
         .from('sessions')
@@ -23,12 +56,16 @@ export const WeeklySessionsTracker = () => {
 
       if (error) {
         console.error('Error fetching sessions:', error);
+        if (error.message.includes('JWT expired')) {
+          navigate('/');
+        }
         throw error;
       }
 
       console.log('Weekly sessions data:', data);
       return data || [];
     },
+    enabled: isAuthenticated,
   });
 
   // Check if a day has sessions and count them
@@ -51,6 +88,10 @@ export const WeeklySessionsTracker = () => {
     name: format(day, 'EEE'),
     sessions: getSessionsForDay(day),
   }));
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="mt-8 mb-8 p-6 bg-breath-subtle rounded-xl border border-breath-border">
