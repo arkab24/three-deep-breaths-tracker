@@ -51,9 +51,17 @@ export const BreathingCircle = () => {
 
   const handleSessionComplete = async () => {
     try {
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError || !user) {
+        throw new Error('User not authenticated');
+      }
+
       const { error } = await supabase
         .from('sessions')
-        .insert([{}]);
+        .insert([{
+          user_id: user.id
+        }]);
 
       if (error) throw error;
 
