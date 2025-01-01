@@ -34,13 +34,13 @@ export const MonthlyProgressIndicator = ({
             </span>
             <div
               className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                sessionsInMonth > 0
+                perfectWeeks > 0
                   ? 'bg-breath-inhale text-white'
                   : 'bg-breath-subtle border border-breath-border'
               }`}
             >
-              {sessionsInMonth > 0 ? (
-                <span className="text-xs">{sessionsInMonth}</span>
+              {perfectWeeks > 0 ? (
+                <span className="text-xs">{perfectWeeks}</span>
               ) : (
                 <X className="w-4 h-4 text-breath-text opacity-30" />
               )}
@@ -48,7 +48,7 @@ export const MonthlyProgressIndicator = ({
           </div>
         </TooltipTrigger>
         <TooltipContent>
-          <p>Perfect weeks: {perfectWeeks}</p>
+          <p>number of perfect weeks (at least one session every day of the week)</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
