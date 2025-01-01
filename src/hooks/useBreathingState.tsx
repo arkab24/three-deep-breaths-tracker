@@ -35,6 +35,7 @@ export const useBreathingState = ({ onSessionComplete }: UseBreathingStateProps)
           toast({
             title: "Session Complete!",
             description: "You've completed 3 deep breaths. Great job!",
+            duration: 3000, // 3 seconds
           });
           console.log('Session completed, count increased');
         } else {
