@@ -19,6 +19,7 @@ export default {
     },
     extend: {
       colors: {
+        border: "hsl(var(--border))",
         breath: {
           inhale: "#F2FCE2",
           exhale: "#D3E4FD",
