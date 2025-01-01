@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Landing from "./pages/Landing";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { Navbar } from "./components/Navbar";
 
 const queryClient = new QueryClient();
 
@@ -15,18 +16,23 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route
-            path="/app"
-            element={
-              <ProtectedRoute>
-                <Index />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <div className="min-h-screen flex flex-col">
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route
+              path="/app"
+              element={
+                <ProtectedRoute>
+                  <>
+                    <Navbar />
+                    <Index />
+                  </>
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </div>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
