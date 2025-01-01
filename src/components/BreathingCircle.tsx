@@ -54,7 +54,7 @@ export const BreathingCircle = () => {
   };
 
   const getCircleStyles = () => {
-    const baseStyles = "w-64 h-64 rounded-full flex items-center justify-center cursor-pointer transition-all duration-500 relative";
+    const baseStyles = "w-48 h-48 rounded-full flex items-center justify-center cursor-pointer transition-all duration-500 relative"; // Reduced from w-64 h-64
     
     if (breathingState === 'inhale') {
       return `${baseStyles} bg-breath-inhale animate-fill`;
@@ -65,15 +65,19 @@ export const BreathingCircle = () => {
   };
 
   return (
-    <div className="min-h-screen bg-breath-background flex flex-col items-center justify-center space-y-8">
-      <h1 className="text-3xl font-semibold text-breath-text mb-8">Three Deep Breaths</h1>
+    <div className="min-h-screen bg-breath-background flex flex-col items-center justify-center gap-8 px-4">
+      <h1 className="text-3xl font-semibold text-breath-text">Three Deep Breaths</h1>
       
-      <div className="relative">
+      <div className="flex flex-col items-center gap-8">
+        <div className="text-breath-text text-xl mb-4">
+          Breath: {currentBreath}/3
+        </div>
+
         <div
           onClick={handleCircleClick}
           className={getCircleStyles()}
         >
-          <span className="text-2xl text-breath-text">
+          <span className="text-xl text-breath-text"> {/* Reduced from text-2xl */}
             {breathingState === 'idle' 
               ? (isAnimating ? '' : 'Click to begin') 
               : breathingState === 'inhale' 
@@ -81,14 +85,10 @@ export const BreathingCircle = () => {
                 : 'Exhale...'}
           </span>
         </div>
-      </div>
 
-      <div className="text-breath-text text-xl">
-        Breath: {currentBreath}/3
-      </div>
-
-      <div className="text-breath-text text-xl">
-        Sessions completed today: {sessionCount}
+        <div className="text-breath-text text-xl mt-4">
+          Sessions completed today: {sessionCount}
+        </div>
       </div>
 
       {breathingState === 'idle' && !isAnimating && currentBreath > 0 && (

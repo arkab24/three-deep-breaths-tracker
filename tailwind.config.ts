@@ -52,10 +52,10 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        "breath-background": "#f0f4f8",
+        "breath-background": "#F1F0FB", // Soft calming background
         "breath-text": "#2d3748",
-        "breath-inhale": "#48bb78",
-        "breath-exhale": "#4299e1",
+        "breath-inhale": "#F2FCE2", // Soft green for inhale
+        "breath-exhale": "#D3E4FD", // Soft blue for exhale
       },
       keyframes: {
         "accordion-down": {
@@ -68,10 +68,10 @@ const config = {
         },
         fill: {
           '0%': { transform: 'scale(1)' },
-          '100%': { transform: 'scale(1.5)' }
+          '100%': { transform: 'scale(1.25)' } // Reduced from 1.5 to 1.25
         },
         shrink: {
-          '0%': { transform: 'scale(1.5)' },
+          '0%': { transform: 'scale(1.25)' }, // Reduced from 1.5 to 1.25
           '100%': { transform: 'scale(1)' }
         }
       },
