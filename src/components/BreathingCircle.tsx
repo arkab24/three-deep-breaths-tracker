@@ -89,16 +89,18 @@ export const BreathingCircle = () => {
   };
 
   return (
-    <div className="min-h-[70vh] md:min-h-[80vh] bg-breath-background flex flex-col items-center justify-center gap-6 md:gap-8 px-4 py-12 rounded-lg">
-      <h1 className="text-2xl md:text-3xl font-semibold text-breath-text">Three Deep Breaths</h1>
+    <div className="min-h-[70vh] md:min-h-[80vh] bg-breath-background flex flex-col items-center justify-center gap-4 md:gap-6 px-4 py-8 md:py-12 rounded-lg">
+      <h1 className="text-2xl md:text-3xl font-semibold text-breath-text mb-2 md:mb-4">Three Deep Breaths</h1>
       
-      <div className="flex flex-col items-center gap-6 md:gap-8">
-        <SessionCounter 
-          currentBreath={currentBreath}
-          sessionCount={sessionCount}
-          breathingState={breathingState}
-          isAnimating={isAnimating}
-        />
+      <div className="flex flex-col items-center">
+        <div className="space-y-1 md:space-y-2 mb-8 md:mb-12 text-center">
+          <SessionCounter 
+            currentBreath={currentBreath}
+            sessionCount={sessionCount}
+            breathingState={breathingState}
+            isAnimating={isAnimating}
+          />
+        </div>
 
         <BreathingAnimation 
           breathingState={breathingState}

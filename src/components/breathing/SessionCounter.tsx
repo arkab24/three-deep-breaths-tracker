@@ -15,16 +15,16 @@ export const SessionCounter = ({
 }: SessionCounterProps) => {
   return (
     <>
-      <div className="text-breath-text text-lg md:text-xl mb-2 md:mb-4">
+      <div className="text-breath-text text-lg md:text-xl">
         Breath: {currentBreath}/3
       </div>
 
-      <div className="text-breath-text text-lg md:text-xl mt-2 md:mt-4">
+      <div className="text-breath-text text-lg md:text-xl">
         Sessions completed today: {sessionCount}
       </div>
 
       {breathingState === 'idle' && !isAnimating && currentBreath > 0 && (
-        <div className="text-sm text-breath-text animate-pulse">
+        <div className="text-sm text-breath-text animate-pulse mt-2">
           Click to continue your session
         </div>
       )}
