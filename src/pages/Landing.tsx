@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
@@ -61,7 +60,7 @@ export default function Landing() {
           view="sign_in"
           showLinks={false}
           redirectTo={window.location.origin + "/app"}
-          socialButtonsPlacement="bottom"
+          socialLayout="vertical"
         />
       </div>
     </div>
