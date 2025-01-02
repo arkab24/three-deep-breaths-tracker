@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { BreathingState } from '@/hooks/useBreathingState';
@@ -10,6 +10,7 @@ interface ParticleCloudProps {
 
 export const ParticleCloud = ({ breathingState, isAnimating }: ParticleCloudProps) => {
   const points = useRef<THREE.Points>(null);
+  const geometry = useRef<THREE.BufferGeometry>(null);
   
   // Create particles
   const particles = useMemo(() => {
@@ -29,8 +30,20 @@ export const ParticleCloud = ({ breathingState, isAnimating }: ParticleCloudProp
     return positions;
   }, []);
 
+  // Cleanup function
+  useEffect(() => {
+    return () => {
+      if (geometry.current) {
+        geometry.current.dispose();
+      }
+      if (points.current?.material) {
+        (points.current.material as THREE.Material).dispose();
+      }
+    };
+  }, []);
+
   useFrame((state) => {
-    if (!points.current) return;
+    if (!points.current || !points.current.geometry) return;
 
     const time = state.clock.getElapsedTime();
     const positions = points.current.geometry.attributes.position.array as Float32Array;
@@ -67,7 +80,7 @@ export const ParticleCloud = ({ breathingState, isAnimating }: ParticleCloudProp
 
   return (
     <points ref={points}>
-      <bufferGeometry>
+      <bufferGeometry ref={geometry}>
         <bufferAttribute
           attach="attributes-position"
           count={particles.length / 3}
