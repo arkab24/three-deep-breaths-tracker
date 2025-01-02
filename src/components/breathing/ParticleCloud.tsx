@@ -9,8 +9,8 @@ interface ParticleCloudProps {
 }
 
 export const ParticleCloud = ({ breathingState, isAnimating }: ParticleCloudProps) => {
-  const points = useRef<THREE.Points>(null);
-  const geometry = useRef<THREE.BufferGeometry>(null);
+  const points = useRef<THREE.Points>(null!);
+  const bufferGeometry = useRef<THREE.BufferGeometry>(null!);
   
   // Create particles
   const particles = useMemo(() => {
@@ -30,23 +30,30 @@ export const ParticleCloud = ({ breathingState, isAnimating }: ParticleCloudProp
     return positions;
   }, []);
 
-  // Cleanup function
+  // Initialize geometry
   useEffect(() => {
+    if (!bufferGeometry.current) {
+      bufferGeometry.current = new THREE.BufferGeometry();
+    }
+    
+    const positionAttribute = new THREE.Float32BufferAttribute(particles, 3);
+    bufferGeometry.current.setAttribute('position', positionAttribute);
+    
     return () => {
-      if (geometry.current) {
-        geometry.current.dispose();
+      if (bufferGeometry.current) {
+        bufferGeometry.current.dispose();
       }
       if (points.current?.material) {
         (points.current.material as THREE.Material).dispose();
       }
     };
-  }, []);
+  }, [particles]);
 
   useFrame((state) => {
-    if (!points.current || !points.current.geometry) return;
+    if (!points.current || !bufferGeometry.current) return;
 
     const time = state.clock.getElapsedTime();
-    const positions = points.current.geometry.attributes.position.array as Float32Array;
+    const positions = bufferGeometry.current.attributes.position.array as Float32Array;
     
     // Calculate scale based on breathing state
     let scale = 1;
@@ -54,8 +61,6 @@ export const ParticleCloud = ({ breathingState, isAnimating }: ParticleCloudProp
       scale = 1.5 + Math.sin(time * 0.5) * 0.5;
     } else if (breathingState === 'exhale') {
       scale = 2 - Math.sin(time * 0.5) * 0.5;
-    } else {
-      scale = 1;
     }
 
     // Update particle positions
@@ -69,7 +74,7 @@ export const ParticleCloud = ({ breathingState, isAnimating }: ParticleCloudProp
       positions[i + 2] = initialZ * scale + Math.sin(time + i) * 0.02;
     }
     
-    points.current.geometry.attributes.position.needsUpdate = true;
+    bufferGeometry.current.attributes.position.needsUpdate = true;
   });
 
   const color = breathingState === 'inhale' 
@@ -80,7 +85,7 @@ export const ParticleCloud = ({ breathingState, isAnimating }: ParticleCloudProp
 
   return (
     <points ref={points}>
-      <bufferGeometry ref={geometry}>
+      <bufferGeometry ref={bufferGeometry}>
         <bufferAttribute
           attach="attributes-position"
           count={particles.length / 3}
