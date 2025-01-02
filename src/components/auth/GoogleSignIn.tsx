@@ -38,13 +38,13 @@ export const GoogleSignIn = () => {
             button_label: 'Sign in',
             loading_button_label: 'Signing in...',
             social_provider_text: 'Sign in with {{provider}}',
-            link_text: "Don't have an account? Sign up",
+            link_text: '',
           },
         },
       }}
       providers={["google"]}
       view="sign_in"
-      showLinks={true}
+      showLinks={false}
       redirectTo={window.location.origin + "/app"}
       socialLayout="vertical"
     />
