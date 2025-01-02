@@ -9,8 +9,8 @@ interface ParticleCloudProps {
 }
 
 export const ParticleCloud = ({ breathingState, isAnimating }: ParticleCloudProps) => {
-  const points = useRef<THREE.Points>(null!);
-  const bufferGeometry = useRef<THREE.BufferGeometry>(null!);
+  const points = useRef<THREE.Points | null>(null);
+  const bufferGeometry = useRef<THREE.BufferGeometry | null>(null);
   
   // Create particles
   const particles = useMemo(() => {
@@ -32,25 +32,28 @@ export const ParticleCloud = ({ breathingState, isAnimating }: ParticleCloudProp
 
   // Initialize geometry
   useEffect(() => {
-    if (!bufferGeometry.current) {
-      bufferGeometry.current = new THREE.BufferGeometry();
-    }
-    
+    bufferGeometry.current = new THREE.BufferGeometry();
     const positionAttribute = new THREE.Float32BufferAttribute(particles, 3);
     bufferGeometry.current.setAttribute('position', positionAttribute);
     
     return () => {
       if (bufferGeometry.current) {
         bufferGeometry.current.dispose();
+        bufferGeometry.current = null;
       }
       if (points.current?.material) {
-        (points.current.material as THREE.Material).dispose();
+        if (Array.isArray(points.current.material)) {
+          points.current.material.forEach(m => m.dispose());
+        } else {
+          points.current.material.dispose();
+        }
+        points.current = null;
       }
     };
   }, [particles]);
 
   useFrame((state) => {
-    if (!points.current || !bufferGeometry.current) return;
+    if (!points.current || !bufferGeometry.current || !bufferGeometry.current.attributes.position) return;
 
     const time = state.clock.getElapsedTime();
     const positions = bufferGeometry.current.attributes.position.array as Float32Array;
