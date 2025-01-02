@@ -1,8 +1,4 @@
-import React, { Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
-import { ParticleCloud } from './ParticleCloud';
-import { ErrorBoundary } from 'react-error-boundary';
+import React from 'react';
 
 type BreathingState = 'idle' | 'inhale' | 'exhale';
 
@@ -13,55 +9,30 @@ interface BreathingAnimationProps {
   onCircleClick: () => void;
 }
 
-const FallbackComponent = () => (
-  <div className="w-full h-full flex items-center justify-center text-breath-text">
-    Loading animation...
-  </div>
-);
-
 export const BreathingAnimation = ({ 
   breathingState, 
   isAnimating, 
+  currentBreath,
   onCircleClick 
 }: BreathingAnimationProps) => {
+  const getCircleStyles = () => {
+    const baseStyles = "w-48 h-48 md:w-64 md:h-64 rounded-full flex items-center justify-center cursor-pointer transition-all duration-500 relative";
+    
+    if (breathingState === 'inhale') {
+      return `${baseStyles} text-breath-inhale animate-fill border-2 border-transparent`;
+    } else if (breathingState === 'exhale') {
+      return `${baseStyles} text-breath-exhale animate-shrink border-2 border-transparent`;
+    }
+    return `${baseStyles} bg-transparent border-2 border-breath-text`;
+  };
+
   return (
-    <div 
-      className="w-48 h-48 md:w-64 md:h-64 relative cursor-pointer"
-      onClick={onCircleClick}
-    >
-      <ErrorBoundary
-        fallback={<FallbackComponent />}
-        onError={(error) => {
-          console.error('Error in breathing animation:', error);
-        }}
+    <div className="relative">
+      <div
+        onClick={onCircleClick}
+        className={getCircleStyles()}
       >
-        <Suspense fallback={<FallbackComponent />}>
-          <Canvas
-            camera={{ position: [0, 0, 4], fov: 50 }}
-            style={{ 
-              background: 'transparent',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              pointerEvents: 'none'
-            }}
-          >
-            <ParticleCloud 
-              breathingState={breathingState}
-              isAnimating={isAnimating}
-            />
-            <OrbitControls 
-              enableZoom={false} 
-              enablePan={false} 
-              enableRotate={false} 
-            />
-          </Canvas>
-        </Suspense>
-      </ErrorBoundary>
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <span className="text-lg md:text-xl text-breath-text z-10">
+        <span className="text-lg md:text-xl text-breath-text z-10 absolute">
           {breathingState === 'idle' 
             ? (isAnimating ? '' : 'Click to begin') 
             : breathingState === 'inhale' 
