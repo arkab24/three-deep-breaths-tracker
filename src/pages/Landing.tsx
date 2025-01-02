@@ -22,7 +22,7 @@ export default function Landing() {
         three deep breaths
       </h1>
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg border border-breath-border">
-        <EmailSignInForm />
+        { /* <EmailSignInForm />
         <div className="mt-6 space-y-4">
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
@@ -33,7 +33,7 @@ export default function Landing() {
                 OR
               </span>
             </div>
-          </div>
+          </div>*/}
           <GoogleSignIn />
         </div>
       </div>
