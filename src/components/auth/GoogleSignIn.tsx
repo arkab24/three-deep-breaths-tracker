@@ -3,6 +3,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 
 export const GoogleSignIn = () => {
+  // Get the current URL's origin for redirect
+  const redirectTo = `${window.location.origin}/app`;
+  
+  console.log("Setting up Google Sign In with redirect to:", redirectTo);
+
   return (
     <Auth
       supabaseClient={supabase}
@@ -45,7 +50,7 @@ export const GoogleSignIn = () => {
       providers={["google"]}
       view="sign_in"
       showLinks={true}
-      redirectTo={window.location.origin + "/app"}
+      redirectTo={redirectTo}
       socialLayout="vertical"
     />
   );

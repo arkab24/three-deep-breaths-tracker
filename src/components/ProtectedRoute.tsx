@@ -31,7 +31,10 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       console.log("Auth state changed:", event, session ? "Session exists" : "No session");
       
-      if (event === 'SIGNED_OUT' || !session) {
+      if (event === 'SIGNED_IN' && session) {
+        console.log("User signed in, navigating to app");
+        navigate("/app");
+      } else if (event === 'SIGNED_OUT' || !session) {
         console.log("User signed out or session expired, redirecting to login");
         navigate("/");
       }
