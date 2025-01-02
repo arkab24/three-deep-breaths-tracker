@@ -38,8 +38,8 @@ export const BreathingAnimation = ({
         <Suspense fallback={<FallbackComponent />}>
           <Canvas
             camera={{ position: [0, 0, 4], fov: 50 }}
-            gl={{ alpha: true, antialias: true }}
             style={{ 
+              background: 'transparent',
               position: 'absolute',
               top: 0,
               left: 0,
@@ -48,8 +48,6 @@ export const BreathingAnimation = ({
               pointerEvents: 'none'
             }}
           >
-            <ambientLight intensity={0.5} />
-            <pointLight position={[10, 10, 10]} />
             <ParticleCloud 
               breathingState={breathingState}
               isAnimating={isAnimating}

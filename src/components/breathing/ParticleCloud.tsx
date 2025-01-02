@@ -1,10 +1,9 @@
 import { useFrame } from '@react-three/fiber';
-import { useParticleSystem } from '@/hooks/useParticleSystem';
-import { calculateParticleScale, updateParticlePositions } from '@/utils/particleUtils';
-import { BreathingState } from '@/hooks/useBreathingState';
 import { Points } from '@react-three/drei';
 import * as THREE from 'three';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
+import { BreathingState } from '@/hooks/useBreathingState';
+import { getParticleColor } from '@/utils/particleUtils';
 
 interface ParticleCloudProps {
   breathingState: BreathingState;
@@ -12,18 +11,7 @@ interface ParticleCloudProps {
 }
 
 export const ParticleCloud = ({ breathingState, isAnimating }: ParticleCloudProps) => {
-  const { geometry, material } = useParticleSystem(breathingState);
-
-  useFrame((state) => {
-    if (!geometry.current?.attributes.position) return;
-
-    const time = state.clock.getElapsedTime();
-    const positions = geometry.current.attributes.position.array as Float32Array;
-    const scale = calculateParticleScale(breathingState, time);
-    
-    updateParticlePositions(positions, positions, scale, time);
-    geometry.current.attributes.position.needsUpdate = true;
-  });
+  const pointsRef = useRef<THREE.Points>(null);
 
   // Create vertices for particles
   const vertices = useMemo(() => {
@@ -40,8 +28,26 @@ export const ParticleCloud = ({ breathingState, isAnimating }: ParticleCloudProp
     return positions;
   }, []);
 
+  useFrame((state) => {
+    if (!pointsRef.current) return;
+
+    const time = state.clock.getElapsedTime();
+    const positions = pointsRef.current.geometry.getAttribute('position').array as Float32Array;
+    
+    // Update particle positions
+    for (let i = 0; i < positions.length; i += 3) {
+      const scale = isAnimating ? (breathingState === 'inhale' ? 1.2 : 0.8) : 1;
+      
+      positions[i] *= scale + Math.sin(time + i) * 0.02;
+      positions[i + 1] *= scale + Math.cos(time + i) * 0.02;
+      positions[i + 2] *= scale + Math.sin(time + i) * 0.02;
+    }
+    
+    pointsRef.current.geometry.attributes.position.needsUpdate = true;
+  });
+
   return (
-    <Points>
+    <Points ref={pointsRef}>
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
@@ -52,7 +58,7 @@ export const ParticleCloud = ({ breathingState, isAnimating }: ParticleCloudProp
       </bufferGeometry>
       <pointsMaterial
         size={0.02}
-        color={material.current?.color}
+        color={getParticleColor(breathingState)}
         transparent
         opacity={0.8}
         sizeAttenuation
