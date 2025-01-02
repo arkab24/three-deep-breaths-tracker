@@ -9,8 +9,9 @@ interface ParticleCloudProps {
 }
 
 export const ParticleCloud = ({ breathingState, isAnimating }: ParticleCloudProps) => {
-  const points = useRef<THREE.Points | null>(null);
-  const bufferGeometry = useRef<THREE.BufferGeometry | null>(null);
+  const points = useRef<THREE.Points>(null);
+  const geometry = useRef<THREE.BufferGeometry>(null);
+  const material = useRef<THREE.PointsMaterial>(null);
   
   // Create particles
   const particles = useMemo(() => {
@@ -30,33 +31,48 @@ export const ParticleCloud = ({ breathingState, isAnimating }: ParticleCloudProp
     return positions;
   }, []);
 
-  // Initialize geometry
+  // Initialize geometry and material
   useEffect(() => {
-    bufferGeometry.current = new THREE.BufferGeometry();
+    // Create new geometry
+    const newGeometry = new THREE.BufferGeometry();
     const positionAttribute = new THREE.Float32BufferAttribute(particles, 3);
-    bufferGeometry.current.setAttribute('position', positionAttribute);
-    
+    newGeometry.setAttribute('position', positionAttribute);
+    geometry.current = newGeometry;
+
+    // Create new material
+    const newMaterial = new THREE.PointsMaterial({
+      size: 0.02,
+      color: breathingState === 'inhale' ? '#008489' : breathingState === 'exhale' ? '#00A699' : '#484848',
+      transparent: true,
+      opacity: 0.8,
+      sizeAttenuation: true,
+      depthWrite: false,
+    });
+    material.current = newMaterial;
+
+    // Create points
+    const newPoints = new THREE.Points(newGeometry, newMaterial);
+    points.current = newPoints;
+
+    // Cleanup function
     return () => {
-      if (bufferGeometry.current) {
-        bufferGeometry.current.dispose();
-        bufferGeometry.current = null;
+      if (geometry.current) {
+        geometry.current.dispose();
       }
-      if (points.current?.material) {
-        if (Array.isArray(points.current.material)) {
-          points.current.material.forEach(m => m.dispose());
-        } else {
-          points.current.material.dispose();
-        }
-        points.current = null;
+      if (material.current) {
+        material.current.dispose();
       }
+      geometry.current = null;
+      material.current = null;
+      points.current = null;
     };
-  }, [particles]);
+  }, [particles, breathingState]);
 
   useFrame((state) => {
-    if (!points.current || !bufferGeometry.current || !bufferGeometry.current.attributes.position) return;
+    if (!points.current || !geometry.current || !geometry.current.attributes.position) return;
 
     const time = state.clock.getElapsedTime();
-    const positions = bufferGeometry.current.attributes.position.array as Float32Array;
+    const positions = geometry.current.attributes.position.array as Float32Array;
     
     // Calculate scale based on breathing state
     let scale = 1;
@@ -77,33 +93,10 @@ export const ParticleCloud = ({ breathingState, isAnimating }: ParticleCloudProp
       positions[i + 2] = initialZ * scale + Math.sin(time + i) * 0.02;
     }
     
-    bufferGeometry.current.attributes.position.needsUpdate = true;
+    geometry.current.attributes.position.needsUpdate = true;
   });
 
-  const color = breathingState === 'inhale' 
-    ? '#008489' 
-    : breathingState === 'exhale' 
-      ? '#00A699' 
-      : '#484848';
-
   return (
-    <points ref={points}>
-      <bufferGeometry ref={bufferGeometry}>
-        <bufferAttribute
-          attach="attributes-position"
-          count={particles.length / 3}
-          array={particles}
-          itemSize={3}
-        />
-      </bufferGeometry>
-      <pointsMaterial
-        size={0.02}
-        color={color}
-        transparent
-        opacity={0.8}
-        sizeAttenuation
-        depthWrite={false}
-      />
-    </points>
+    <primitive object={points.current} />
   );
 };

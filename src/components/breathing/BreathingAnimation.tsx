@@ -39,7 +39,14 @@ export const BreathingAnimation = ({
           <Canvas
             camera={{ position: [0, 0, 4], fov: 50 }}
             gl={{ alpha: true, antialias: true }}
-            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+            style={{ 
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              pointerEvents: 'none'
+            }}
           >
             <ambientLight intensity={0.5} />
             <pointLight position={[10, 10, 10]} />
@@ -47,7 +54,11 @@ export const BreathingAnimation = ({
               breathingState={breathingState}
               isAnimating={isAnimating}
             />
-            <OrbitControls enableZoom={false} enablePan={false} enableRotate={false} />
+            <OrbitControls 
+              enableZoom={false} 
+              enablePan={false} 
+              enableRotate={false} 
+            />
           </Canvas>
         </Suspense>
       </ErrorBoundary>
