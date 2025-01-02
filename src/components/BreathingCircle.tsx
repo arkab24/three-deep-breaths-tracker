@@ -11,7 +11,7 @@ export const BreathingCircle = () => {
   });
 
   return (
-    <div className="min-h-[70vh] md:min-h-[80vh] bg-breath-background flex flex-col items-center justify-center gap-4 md:gap-6 px-4 py-4 md:py-6 rounded-lg">
+    <div className="min-h-[70vh] md:min-h-[80vh] bg-breath-background flex flex-col items-center justify-center gap-4 md:gap-6 px-4 py-8 md:py-12 rounded-lg">
       <h1 className="text-2xl md:text-3xl font-semibold text-breath-text mb-2 md:mb-4">Three Deep Breaths</h1>
       
       <div className="flex flex-col items-center">

@@ -40,14 +40,6 @@ export const GoogleSignIn = () => {
             social_provider_text: 'Sign in with {{provider}}',
             link_text: "Don't have an account? Sign up",
           },
-          sign_up: {
-            email_label: 'Email',
-            password_label: 'Password',
-            button_label: 'Sign up',
-            loading_button_label: 'Signing up...',
-            social_provider_text: 'Sign up with {{provider}}',
-            link_text: 'Have an account? Sign in',
-          },
         },
       }}
       providers={["google"]}
