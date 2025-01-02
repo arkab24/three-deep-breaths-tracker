@@ -46,7 +46,7 @@ export const GoogleSignIn = () => {
             button_label: 'Sign up',
             loading_button_label: 'Signing up...',
             social_provider_text: 'Sign up with {{provider}}',
-            link_text: '',
+            link_text: 'Have an account? Sign in',
           },
         },
       }}
