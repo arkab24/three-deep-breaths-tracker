@@ -1,57 +1,45 @@
-import { Auth } from "@supabase/auth-ui-react";
-import { supabase } from "@/integrations/supabase/client";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
+import React from 'react';
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { supabase } from '@/integrations/supabase/client';
 
 export const GoogleSignIn = () => {
-  // Get the current URL's origin for redirect
-  const redirectTo = `${window.location.origin}/app`;
-  
-  console.log("Setting up Google Sign In with redirect to:", redirectTo);
+  const handleGoogleSignIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const { idToken } = await GoogleSignin.signIn();
+      
+      const { error } = await supabase.auth.signInWithIdToken({
+        provider: 'google',
+        token: idToken,
+      });
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error signing in with Google:', error);
+    }
+  };
 
   return (
-    <Auth
-      supabaseClient={supabase}
-      appearance={{
-        theme: ThemeSupa,
-        variables: {
-          default: {
-            colors: {
-              brand: '#008489',
-              brandAccent: '#00A699',
-              brandButtonText: 'white',
-              defaultButtonBackground: '#F8F8F8',
-              defaultButtonBackgroundHover: '#EBEBEB',
-              inputBackground: 'white',
-              inputBorder: '#EBEBEB',
-              inputBorderHover: '#008489',
-              inputBorderFocus: '#00A699',
-            }
-          }
-        },
-        className: {
-          container: 'space-y-4',
-          divider: 'hidden',
-          button: 'w-full',
-          anchor: 'text-breath-inhale hover:text-breath-exhale',
-        }
-      }}
-      localization={{
-        variables: {
-          sign_in: {
-            email_label: 'Email',
-            password_label: 'Password',
-            button_label: 'Sign in',
-            loading_button_label: 'Signing in...',
-            social_provider_text: 'Sign in with {{provider}}',
-            link_text: "Don't have an account? Sign up",
-          },
-        },
-      }}
-      providers={["google"]}
-      view="sign_in"
-      showLinks={true}
-      redirectTo={redirectTo}
-      socialLayout="vertical"
-    />
+    <TouchableOpacity 
+      style={styles.button}
+      onPress={handleGoogleSignIn}
+    >
+      <Text style={styles.buttonText}>Sign in with Google</Text>
+    </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: '#008489',
+    padding: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+});
